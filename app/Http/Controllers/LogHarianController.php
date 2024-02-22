@@ -71,20 +71,24 @@ class LogHarianController extends Controller
     {
         $logHarian = LogHarian::findOrFail($id);
 
-        return Inertia::render('LogHarian/show', compact('logHarian'));
+        return Inertia::render('LogHarian/show', [
+            'logHarian'=> $logHarian,
+        ]);
     }
 
     /**
      * Menampilkan formulir untuk mengedit log harian.
      *
-     * @param  int  $id
+     * @param  int  $slug
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        $logHarian = LogHarian::findOrFail($id);
+        $logHarian = LogHarian::findOrFail($slug);
 
-        return Inertia::render('LogHarian/edit', compact('logHarian'));
+        return Inertia::render('LogHarian/Edit', [
+            'logHarian'=> $logHarian,
+        ]);
     }
 
     /**

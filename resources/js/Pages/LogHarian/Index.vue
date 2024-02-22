@@ -7,6 +7,8 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
 import Modal from '@/Components/Modal.vue';
+import Message from '@/Components/Message.vue';
+import ShowVue from './Show.vue';
 import { ref, defineProps } from 'vue';
 const props = defineProps({
     LogHarian: {
@@ -19,7 +21,7 @@ console.log(props.LogHarian.length)
 
 const search = ref(null);
 
-const ModalShow = ref(false);
+const ModalTambah = ref(false);
 
 const Form = useForm({
     deskripsi: '',
@@ -31,7 +33,7 @@ const Form = useForm({
 const submit = () => {
     Form.post(route('LogHarian.store'), {
         onSuccess: () => {
-            ModalShow.value = false;
+            ModalTambah.value = false;
             Form.reset()
         },
     });
@@ -66,12 +68,20 @@ const FormDelete = useForm({
     slug: null,
 });
 function deleteLog() {
-    FormDelete.delete(route('Artikel.delete'), {
+    FormDelete.delete(route('LogHarian.destroy', {slug: FormDelete.slug}), {
         onSuccess: () => {
             modalDelete.value = false;
             FormDelete.reset()
         }
     })
+}
+
+const ModalShow = ref(false);
+const data_Show= ref({})
+function ShowLogHarian(item){
+    ModalShow.value = true;
+    data_Show.value = item;
+    console.log(item)
 }
 </script>
 
@@ -81,11 +91,11 @@ function deleteLog() {
         <Head title="LogHarian" />
         <template #header>
             <h2 class="font-semibold leading-tight">LogHarian</h2>
-
+            <Message/>
         </template>
 
         <!-- Modal tambah -->
-        <Modal :show="ModalShow">
+        <Modal :show="ModalTambah">
             <section class="p-6 ">
                 <form @submit.prevent="submit" class="container  mx-auto space-y-12">
                     <fieldset class="grid grid-cols-4 gap-6 rounded-md shadow-sm">
@@ -139,8 +149,8 @@ function deleteLog() {
             </section>
         </Modal>
 
-        <!-- End Modal Tambah -->
 
+        <!-- End Modal Tambah -->
         <!-- Modal Delete -->
         <Modal :show="modalDelete" :maxWidth="'md'">
             <div class="max-w-full h-full flex justify-center items-center ">
@@ -157,6 +167,44 @@ function deleteLog() {
             </div>
         </Modal>
         <!-- End Modal Delete -->
+        <!-- Modal Show -->
+        <Modal :show="ModalShow" :maxWidth="'md'">
+            <div class="container p-2 mx-auto sm:p-4 ">
+                <PrimaryButton type="button" class="bg-red-500 hover:bg-red-600 hover:text-white" @click="ModalShow=false">Tutup</PrimaryButton>
+
+                <h2 class="mb-4 text-2xl font-semibold leadi">Detail Log Harian Pegawai</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full p-6 text-xs text-left whitespace-nowrap">
+                        <tr>
+                            <th class="px-2 text-base">ID Pegawai</th>
+                            <td class="px-3 py-2 text-base">{{ data_Show.id_pegawai }}</td>
+
+                        </tr>
+                        <tr>
+                            <th class="px-2 text-base">Tanggal</th>
+                            <td class="px-3 py-2 text-base">{{ data_Show.tanggal }}</td>
+
+                        </tr>
+                        <tr>
+                            <th class="px-2 text-base">Deskripsi</th>
+                            <td class="px-3 py-2 text-base">{{ data_Show.deskripsi }}</td>
+                        </tr>
+                        <tr>
+                            <th class="px-2 text-base">File</th>
+                            <td class="px-3 py-2 text-base">
+                                <a v-if="data_Show.file" :href="data_Show.file" target="_blank">{{ data_Show.file }}</a>
+                                <span v-else>File Tidak Ada</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="px-2 text-base">Status</th>
+                            <td class="px-3 py-2 text-base">{{ data_Show.status }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </Modal>
+        <!-- End Modal Show -->
         <div class="py-2">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border lg:px-10 lg:py-4">
@@ -184,7 +232,7 @@ function deleteLog() {
                                     </form>
                                 </div>
                                 <div class="w-full md:w-1/2 lg:text-right">
-                                    <PrimaryButton @click="ModalShow = true" type="button">Tambah</PrimaryButton>
+                                    <PrimaryButton @click="ModalTambah = true" type="button">Tambah</PrimaryButton>
                                 </div>
                             </div>
                         </div>
@@ -234,7 +282,7 @@ function deleteLog() {
                                                             d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                                     </svg>
                                                 </PrimaryButton>
-                                                <Link :href="route('LogHarian.show', { slug: item.id })" method="get"
+                                                <PrimaryButton @click="ShowLogHarian(item)"
                                                     as="button" class=" px-2 py-2 rounded-lg bg-transparent text-blue-500 hover:text-white hover:bg-blue-600 active:bg-blue-400">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                     stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -244,7 +292,7 @@ function deleteLog() {
                                                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 </svg>
 
-                                                </Link>
+                                                </PrimaryButton>
                                                 <Link :href="route('LogHarian.edit', { slug: item.id })" method="get"
                                                     as="button" class="px-2 py-2 rounded-lg bg-transparent text-green-500 hover:text-white hover:bg-green-600 active:bg-green-400">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

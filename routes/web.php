@@ -47,9 +47,9 @@ Route::middleware(['auth', 'role:Direktur'])->group(function () {
             Route::get('create', 'create')->name('create');
             Route::post('store', 'store')->name('store');
             Route::get('show', 'show')->name('show');
-            Route::get('edit', 'edit')->name('edit');
-            Route::put('update', 'update')->name('update');
-            Route::delete('destroy', 'destroy')->name('destroy');
+            Route::get('edit/{slug}', 'edit')->name('edit');
+            Route::post('update', 'update')->name('update');
+            Route::delete('destroy/{slug}', 'destroy')->name('destroy');
         });
     });
 

@@ -9,7 +9,7 @@ const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
-    <div>
+    <div class="bg-emerald-600">
         <sidebar />
         <div class="relative md:ml-64 bg-blueGray-100">
             <!-- Navbar -->
@@ -28,7 +28,7 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </nav>
             <!-- End Navbar -->
-            <div class="relative bg-emerald-600 md:pt-32 pb-32 pt-12">
+            <div class="relative h-screen bg-emerald-600 md:pt-32 pb-32 pt-12">
                 <slot />
             </div>
             <div class="px-4 md:px-10 mx-auto w-full -m-24">
