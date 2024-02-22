@@ -22,11 +22,9 @@ class StoreLogHarianRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id_pegawai' => 'required|integer',
             'tanggal' => 'required|date',
             'deskripsi' => 'required|string|max:255',
             'file' => 'nullable|file|max:255',
-            'status' => 'required|in:Direktur,Manager,Staff',
         ];
     }
 }

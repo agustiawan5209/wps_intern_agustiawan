@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'jabaran',
+        'jabatan',
         'id_kepala',
     ];
 
@@ -43,18 +43,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_director'=> 'boolean',
+        'is_manager'=> 'boolean',
+        'is_staff'=> 'boolean',
     ];
 
     public function isDirector()
     {
-        return $this->jabaran === 'Direktur';
+        return $this->jabatan === 'Direktur';
     }
     public function isManager()
     {
-        return $this->jabaran === 'Manager';
+        return $this->jabatan === 'Manager';
     }
     public function isStaff()
     {
-        return $this->jabaran === 'Staff';
+        return $this->jabatan === 'Staff';
     }
 }

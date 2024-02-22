@@ -19,16 +19,20 @@ class LogHarianController extends Controller
     public function index()
     {
         $user = Auth::user();
-
-        if ($user->hasRole('Direktur')) {
-            $logHarians = LogHarian::all();
-        } else if ($user->hasRole('Manager')) {
-            $logHarians = LogHarian::where('id_pegawai', $user->id)->get();
+        // dd($user);
+        if ($user->is_director) {
+            $logHarian = LogHarian::with(['user'])->paginate(10);
+        } else if ($user->is_manager) {
+            $logHarian = LogHarian::with(['user'])->where('id_pegawai', $user->id)->paginate(20);
         } else {
-            $logHarians = LogHarian::where('id_pegawai', $user->id)->where('status', '<>', 'Direktur')->get();
+            $logHarian = LogHarian::with(['user'])->where('id_pegawai', $user->id)->paginate(20);
         }
 
-        return Inertia::render('LogHarian.index', compact('logHarians'));
+        // dd($logHarian);
+
+        return Inertia::render('LogHarian/Index', [
+            'LogHarian'=> $logHarian
+        ]);
     }
 
     /**
@@ -38,7 +42,7 @@ class LogHarianController extends Controller
      */
     public function create()
     {
-        return Inertia::render('LogHarian.create');
+        return Inertia::render('LogHarian/create');
     }
 
     /**
@@ -50,8 +54,9 @@ class LogHarianController extends Controller
     public function store(StoreLogHarianRequest $request)
     {
 
-
-        $logHarian = LogHarian::create($request->all());
+        $data = $request->all();
+        $data['id_pegawai'] = Auth::user()->id;
+        $logHarian = LogHarian::create($data);
 
         return redirect()->route('LogHarian.index')->with('success', 'Log Harian berhasil dibuat.');
     }
@@ -66,7 +71,7 @@ class LogHarianController extends Controller
     {
         $logHarian = LogHarian::findOrFail($id);
 
-        return Inertia::render('LogHarian.show', compact('logHarian'));
+        return Inertia::render('LogHarian/show', compact('logHarian'));
     }
 
     /**
@@ -79,7 +84,7 @@ class LogHarianController extends Controller
     {
         $logHarian = LogHarian::findOrFail($id);
 
-        return Inertia::render('LogHarian.edit', compact('logHarian'));
+        return Inertia::render('LogHarian/edit', compact('logHarian'));
     }
 
     /**

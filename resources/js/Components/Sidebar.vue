@@ -66,7 +66,7 @@
                     </li>
 
                     <li class="items-center border-b-2 border-gray-400">
-                        <NavLink class="my-3">
+                        <NavLink :href="route('LogHarian.index')" class="my-3">
                             Log Harian
                         </NavLink>
                     </li>

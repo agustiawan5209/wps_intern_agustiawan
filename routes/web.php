@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\LogHarianController;
 use App\Http\Controllers\ProfileController;
+use App\Models\LogHarian;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,3 +38,19 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::middleware(['auth', 'role:Direktur'])->group(function () {
+
+    Route::group(['prefix' => 'LogHarian', 'as' => 'LogHarian.'], function () {
+        Route::controller(LogHarianController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('show', 'show')->name('show');
+            Route::get('edit', 'edit')->name('edit');
+            Route::put('update', 'update')->name('update');
+            Route::delete('destroy', 'destroy')->name('destroy');
+        });
+    });
+
+});
