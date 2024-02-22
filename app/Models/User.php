@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'jabaran',
+        'id_kepala',
     ];
 
     /**
@@ -42,4 +44,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function isDirector()
+    {
+        return $this->jabaran === 'Direktur';
+    }
+    public function isManager()
+    {
+        return $this->jabaran === 'Manager';
+    }
+    public function isStaff()
+    {
+        return $this->jabaran === 'Staff';
+    }
 }
